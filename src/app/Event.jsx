@@ -1,0 +1,22 @@
+import React from "react";
+import styles from "./event.module.css";
+
+function Event({ start, end, index, date, title, description, timelineStart, timelineEnd, extra_styles }) {
+  let totalYears = timelineEnd - timelineStart;
+  let leftPosition = ((start - timelineStart) / totalYears) * 100;
+  let width = ((end - start) / totalYears) * 100;
+  let eventHeight = 8.5;
+  let topPosition = index * eventHeight;
+
+  return (
+    <div className={styles.event} style={{ ...extra_styles, left: `${leftPosition}%`, width: `${width}%`, top: `${topPosition}rem` }}>
+      <h3 className={styles.title}>{title}</h3>
+      <div className={styles.content}>
+        <span className={styles.date}>{date}</span>
+        <p>{description}</p>
+      </div>
+    </div>
+  );
+}
+
+export default Event;

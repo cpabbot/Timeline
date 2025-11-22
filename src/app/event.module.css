@@ -1,0 +1,20 @@
+.event {
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.5rem;
+  position: absolute;
+  background-color: #eee;
+  margin-top: 0.5rem;
+  overflow: hidden;
+  height: 8rem;
+}
+
+.title {
+  margin: 0 0 0.2rem 0;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.content p {
+  margin: 0;
+  color: #555;
+}
