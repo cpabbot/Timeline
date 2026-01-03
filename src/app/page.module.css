@@ -1,5 +1,10 @@
+.header {
+    height: 15vh;
+}
+
 .title {
     font-weight: normal;
     color: #555;
-    margin: 2rem 3rem;
+    padding: 2rem 3rem;
+    margin: 0;
 }

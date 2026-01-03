@@ -1,6 +1,14 @@
 .timelineContainer {
-  background-color: lightblue;
   position: relative;
+  height: 85vh;
+  overflow-x: scroll;
+  padding: 1rem 0;
+}
+
+.zoomContainer {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
 }
 
 .timelineBar {

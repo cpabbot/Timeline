@@ -13,8 +13,12 @@ const data = async() => {
 
 export default function Home() {
   data();
-  return <main>
-    <h2 className={styles.title}>Family Timeline</h2>
-    <Timeline />
-  </main>;
+  return (
+    <main>
+      <div className={styles.header}>
+        <h2 className={styles.title}>Family Timeline</h2>
+      </div>
+      <Timeline />
+    </main>
+  );
 }
