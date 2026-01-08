@@ -3,14 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import styles from "./timeline.module.css";
 import Event from "./Event";
-
-let events = [
-  { start: 2001.00, end: 2002.00, date: "June 2001", title: "title", description: "description" },
-  { start: 2005.00, end: 2010.00, date: "2005 - 2010", title: "Another Event", description: "This is another event description." },
-  { start: 2001.00, end: 2003.00, date: "2001 - 2003", title: "Third Event", description: "Details about the third event go here." },
-  { start: 1995.00, end: 2007.00, date: "1995 - 2007", title: "Long Event", description: "Information about the fourth event." },
-  { start: 1950.00, end: 1951.00, date: "1950 - 1951", title: "Old Event", description: "Description of the old event." }
-];
+import eventService from "../services/event";
 
 function assignEventIndices(events) {
   // Sort by start time for consistency
@@ -35,16 +28,43 @@ function assignEventIndices(events) {
 }
 
 function Timeline() {
-  const eventsWithIndices = useMemo(() => assignEventIndices(events), []);
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const eventsWithIndices = useMemo(() => 
+    events.length > 0 ? assignEventIndices(events) : [],
+    [events]
+  );
+
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        const fetchedEvents = await eventService.getEvents();
+        setEvents(fetchedEvents);
+      } catch (error) {
+        console.error("Failed to load events:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadEvents();
+  }, []);
 
   // Total timeline range (never changes - based on all events)
-  const timelineStart = useMemo(() => eventsWithIndices[0].start, [eventsWithIndices]);
-  const timelineEnd = useMemo(() => eventsWithIndices[eventsWithIndices.length - 1].end, [eventsWithIndices]);
+  const timelineStart = useMemo(() =>
+    eventsWithIndices.length > 0 ? eventsWithIndices[0].start : 0,
+    [eventsWithIndices]
+  );
+  const timelineEnd = useMemo(() =>
+    eventsWithIndices.length > 0 ? eventsWithIndices[eventsWithIndices.length - 1].end : 0,
+    [eventsWithIndices]
+  );
 
   // View range (what's currently visible - changes with zoom)
   const [start, setStart] = useState(1950.00);
   const [end, setEnd] = useState(2030.00);
   const [increment, setIncrement] = useState(5);
+  const [compact, setCompact] = useState(false);
 
   // Initialize view range once
   useEffect(() => {
@@ -119,11 +139,16 @@ function Timeline() {
     }, 0);
   };
 
+  if(loading) {
+    return <div>Loading events...</div>;
+  }
+
   return (
     <div className={styles.timelineContainer}>
       <div className={styles.zoomContainer}>
         <button onClick={zoomIn}>Zoom In</button>
         <button onClick={zoomOut}>Zoom Out</button>
+        <button onClick={() => setCompact(!compact)}>{compact ? "Regular View" : "Compact View"}</button>
       </div>
 
       <div className={styles.timelineBar} style={{ width: `${timelineWidth}%` }}>
@@ -147,6 +172,7 @@ function Timeline() {
             description={event.description}
             timelineStart={timelineStart}
             timelineEnd={timelineEnd}
+            size={compact ? "compact" : ""}
           />
         ))}
       </div>

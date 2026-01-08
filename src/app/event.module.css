@@ -6,6 +6,11 @@
   margin-top: 0.5rem;
   overflow: hidden;
   height: 8rem;
+  min-width: 5rem;
+}
+
+.eventCompact {
+  height: 4rem;
 }
 
 .title {
